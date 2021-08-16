@@ -1,0 +1,1 @@
+npx eslint src/state/swap/hooks.ts --fix

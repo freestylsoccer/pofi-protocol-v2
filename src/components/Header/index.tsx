@@ -10,7 +10,7 @@ import { useUserHasAvailableClaim } from 'state/claim/hooks'
 import { useUserHasSubmittedClaim } from 'state/transactions/hooks'
 import { useDarkModeManager } from 'state/user/hooks'
 import { useETHBalances } from 'state/wallet/hooks'
-import styled from 'styled-components/macro'
+import styled, { css } from 'styled-components/macro'
 import Logo from '../../assets/svg/logo.svg'
 import LogoDark from '../../assets/svg/logo_white.svg'
 import { useActiveWeb3React } from '../../hooks/web3'
@@ -24,6 +24,8 @@ import { Dots } from '../swap/styleds'
 import Web3Status from '../Web3Status'
 import NetworkCard from './NetworkCard'
 import UniBalanceContent from './UniBalanceContent'
+
+import { Menu as SideBarMenu, X } from 'react-feather'
 
 const HeaderFrame = styled.div<{ showBackground: boolean }>`
   display: grid;
@@ -47,7 +49,7 @@ const HeaderFrame = styled.div<{ showBackground: boolean }>`
   background-blend-mode: hard-light;
 
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    grid-template-columns: 48px 1fr 1fr;
+    grid-template-columns: 48px 10fr 1fr;
   `};
 
   ${({ theme }) => theme.mediaWidth.upToMedium`
@@ -68,6 +70,51 @@ const HeaderControls = styled.div`
   justify-self: flex-end;
 `
 
+const SideBarWrapper = styled.div`
+  vertical-align: middle;
+  padding-top: 1rem;
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToLarge`
+    display: none;
+  `};
+
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    display: block;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    display: block;
+  `};
+`
+
+const NavToggle = styled.button`
+  display: none;
+  ${({ theme }) => theme.mediaWidth.upToMedium`
+    justify-self: self-end;
+    padding-right: 2rem;
+    background: transparent;
+    border: 0;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    display: block;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    justify-self: self-end;
+    padding-rigth: 1rem;
+    background: transparent;
+    border: 0;
+    border-radius: 3px;
+    outline: 0;
+    cursor: pointer;
+    display: block;
+  `};
+`
+const NavClose = styled(NavToggle)`
+  position: absolute;
+  top: 16px;
+  left: 16px;
+`
+
 const HeaderElement = styled.div`
   display: flex;
   align-items: center;
@@ -82,36 +129,105 @@ const HeaderElement = styled.div`
   `};
 `
 
-const HeaderLinks = styled(Row)`
-  justify-self: center;
+const HeaderLinks = styled(Row)<{ isShown: boolean }>`
+  justify-self: flex-end;
   background-color: ${({ theme }) => theme.bg0};
   width: fit-content;
   padding: 4px;
-  border-radius: 16px;
+  border-radius: 0px;
   display: grid;
   grid-auto-flow: column;
   grid-gap: 10px;
   overflow: auto;
   align-items: center;
   ${({ theme }) => theme.mediaWidth.upToLarge`
-    justify-self: start;  
+    justify-self: center;
     `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
-    justify-self: center;
+    justify-self: flex-end;
   `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     flex-direction: row;
-    justify-content: space-between;
-    justify-self: center;
+    justify-self: flex-end;
     z-index: 99;
     position: fixed;
-    bottom: 0; right: 50%;
+    right: 0;
     transform: translate(50%,-50%);
     margin: 0 auto;
     background-color: ${({ theme }) => theme.bg0};
     border: 1px solid ${({ theme }) => theme.bg2};
     box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
+    display: flex;
+    position: fixed;
+    top: 0;    
+    width: 276px;
+    height: 100%;
+    flex-direction: column;
+    padding: 66px 20px;
+    transition: transform .25s ease;
+    will-change: transform;
+    transform: translateX(1000%);
+    overflow-y: scroll;
+    z-index: 6;
   `};
+  ${(props) =>
+    props.isShown
+      ? css`
+          ${({ theme }) => theme.mediaWidth.upToMedium`
+            flex-direction: row;
+            justify-self: flex-end;
+            z-index: 99;
+            position: fixed;
+            right: 0;
+            transform: translate(50%, -50%);
+            margin: 0 auto;
+            background-color: ${({ theme }) => theme.bg0};
+            border: 1px solid ${({ theme }) => theme.bg2};
+            box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
+            display: flex;
+            position: fixed;
+            top: 0;
+            width: 276px;
+            height: 100%;
+            flex-direction: column;
+            padding: 66px 20px;
+            transition: transform 0.25s ease;
+            will-change: transform;
+            transform: translateX(1000%);
+            overflow-y: scroll;
+            z-index: 6;
+            transform: translateX(0);
+            box-shadow: -0.125rem 0 1.25rem 0 #343851;
+        `};
+
+          ${({ theme }) => theme.mediaWidth.upToSmall`
+            flex-direction: row;
+            justify-self: flex-end;
+            z-index: 99;
+            position: fixed;
+            right: 0;
+            transform: translate(50%, -50%);
+            margin: 0 auto;
+            background-color: ${({ theme }) => theme.bg0};
+            border: 1px solid ${({ theme }) => theme.bg2};
+            box-shadow: 0px 6px 10px rgb(0 0 0 / 2%);
+            display: flex;
+            position: fixed;
+            top: 0;
+            width: 276px;
+            height: 100%;
+            flex-direction: column;
+            padding: 66px 20px;
+            transition: transform 0.25s ease;
+            will-change: transform;
+            transform: translateX(1000%);
+            overflow-y: scroll;
+            z-index: 6;
+            transform: translateX(0);
+            box-shadow: -0.125rem 0 1.25rem 0 #343851;
+          `};
+        `
+      : css``};
 `
 
 const AccountElement = styled.div<{ active: boolean }>`
@@ -186,7 +302,6 @@ const StyledNavLink = styled(NavLink).attrs({
 })`
   ${({ theme }) => theme.flexRowNoWrap}
   align-items: left;
-  border-radius: 3rem;
   outline: none;
   cursor: pointer;
   text-decoration: none;
@@ -198,11 +313,10 @@ const StyledNavLink = styled(NavLink).attrs({
   overflow: hidden;
   white-space: nowrap;
   &.${activeClassName} {
-    border-radius: 12px;
     font-weight: 600;
     justify-content: center;
+    border-bottom: 0.25rem solid #000;
     color: ${({ theme }) => theme.text1};
-    background-color: ${({ theme }) => theme.bg2};
   }
 
   :hover,
@@ -257,6 +371,7 @@ export default function Header() {
   const scrollY = useScrollPosition()
 
   const { infoLink } = CHAIN_INFO[chainId ? chainId : SupportedChainId.MAINNET]
+  const [isShown, setIsShown] = useState(false)
   return (
     <HeaderFrame showBackground={scrollY > 45}>
       <ClaimModal />
@@ -268,13 +383,18 @@ export default function Header() {
           <img width={'24px'} src={darkMode ? LogoDark : Logo} alt="logo" />
         </UniIcon>
       </Title>
-      <HeaderLinks>
-        <StyledNavLink id={`swap-nav-link`} to={'/swap'}>
-          <Trans>Swap</Trans>
+      <HeaderLinks isShown={isShown}>
+        <SideBarWrapper>
+          <NavClose onClick={() => setIsShown(!isShown)}>
+            <X strokeWidth="3" color="#000" />
+          </NavClose>
+        </SideBarWrapper>
+        <StyledNavLink id={`swap-nav-link`} to={'/markets'} onClick={() => setIsShown(!isShown)}>
+          <Trans>Markets</Trans>
         </StyledNavLink>
         <StyledNavLink
           id={`pool-nav-link`}
-          to={'/pool'}
+          to={'/test'}
           isActive={(match, { pathname }) =>
             Boolean(match) ||
             pathname.startsWith('/add') ||
@@ -282,50 +402,37 @@ export default function Header() {
             pathname.startsWith('/increase') ||
             pathname.startsWith('/find')
           }
+          onClick={() => setIsShown(!isShown)}
         >
-          <Trans>Pool</Trans>
+          <Trans>My Dashboard</Trans>
         </StyledNavLink>
         {chainId && chainId === SupportedChainId.MAINNET && (
-          <StyledNavLink id={`stake-nav-link`} to={'/vote'}>
-            <Trans>Vote</Trans>
+          <StyledNavLink id={`stake-nav-link`} to={'/vote'} onClick={() => setIsShown(!isShown)}>
+            <Trans>Deposit</Trans>
           </StyledNavLink>
         )}
         <StyledExternalLink id={`stake-nav-link`} href={infoLink}>
-          <Trans>Charts</Trans>
+          <Trans>Borrow</Trans>
           <sup>↗</sup>
         </StyledExternalLink>
+        <HeaderControls>
+          <NetworkCard />
+          <HeaderElement>
+            <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
+              {account && userEthBalance ? (
+                <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
+                  <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
+                </BalanceText>
+              ) : null}
+              <Web3Status />
+            </AccountElement>
+            <Menu />
+          </HeaderElement>
+        </HeaderControls>
       </HeaderLinks>
-
-      <HeaderControls>
-        <NetworkCard />
-        <HeaderElement>
-          {availableClaim && !showClaimPopup && (
-            <UNIWrapper onClick={toggleClaimModal}>
-              <UNIAmount active={!!account && !availableClaim} style={{ pointerEvents: 'auto' }}>
-                <TYPE.white padding="0 2px">
-                  {claimTxn && !claimTxn?.receipt ? (
-                    <Dots>
-                      <Trans>Claiming UNI</Trans>
-                    </Dots>
-                  ) : (
-                    <Trans>Claim UNI</Trans>
-                  )}
-                </TYPE.white>
-              </UNIAmount>
-              <CardNoise />
-            </UNIWrapper>
-          )}
-          <AccountElement active={!!account} style={{ pointerEvents: 'auto' }}>
-            {account && userEthBalance ? (
-              <BalanceText style={{ flexShrink: 0 }} pl="0.75rem" pr="0.5rem" fontWeight={500}>
-                <Trans>{userEthBalance?.toSignificant(3)} ETH</Trans>
-              </BalanceText>
-            ) : null}
-            <Web3Status />
-          </AccountElement>
-          <Menu />
-        </HeaderElement>
-      </HeaderControls>
+      <NavToggle onClick={() => setIsShown(!isShown)}>
+        <SideBarMenu size="30" strokeWidth="3" />
+      </NavToggle>
     </HeaderFrame>
   )
 }

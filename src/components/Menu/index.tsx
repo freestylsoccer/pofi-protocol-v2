@@ -94,22 +94,29 @@ const MenuFlyout = styled.span<{ flyoutAlignment?: FlyoutAlignment }>`
   display: flex;
   flex-direction: column;
   font-size: 16px;
-  position: absolute;
-  top: 3rem;
+  position: fixed;
+  top: 4rem;
   z-index: 100;
 
   ${({ flyoutAlignment = FlyoutAlignment.RIGHT }) =>
     flyoutAlignment === FlyoutAlignment.RIGHT
       ? css`
-          right: 0rem;
+          right: 1rem;
         `
       : css`
-          left: 0rem;
+          left: 1rem;
         `};
   ${({ theme }) => theme.mediaWidth.upToMedium`
     bottom: unset;
+    right: 1;
+    left: unset;
+  `};
+  ${({ theme }) => theme.mediaWidth.upToSmall`
+    bottom: unset;
     right: 0;
     left: unset;
+    position: absolute;
+    top: 3rem;
   `};
 `
 

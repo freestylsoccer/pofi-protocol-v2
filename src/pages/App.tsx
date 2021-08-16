@@ -29,7 +29,9 @@ import Swap from './Swap'
 import { OpenClaimAddressModalAndRedirectToSwap, RedirectPathToSwapOnly, RedirectToSwap } from './Swap/redirects'
 import Vote from './Vote'
 import VotePage from './Vote/VotePage'
-
+import Markets from './Markets'
+import TestPage from './Markets/test'
+import Theter from './Reserves/Theter'
 const AppWrapper = styled.div`
   display: flex;
   flex-flow: column;
@@ -94,6 +96,9 @@ export default function App() {
               <Route exact strict path="/send" component={RedirectPathToSwapOnly} />
               <Route exact strict path="/swap/:outputCurrency" component={RedirectToSwap} />
               <Route exact strict path="/swap" component={Swap} />
+              <Route exact strict path="/markets" component={Markets} />
+              <Route exact strict path="/test" component={TestPage} />
+              <Route exact strict path="/theter-reserve" component={Theter} />
 
               <Route exact strict path="/pool/v2/find" component={PoolFinder} />
               <Route exact strict path="/pool/v2" component={PoolV2} />
